@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import ErrorBoundary from "./Components/Global/ErrorBoundary";
 
 import "./index.scss";
 
@@ -8,9 +9,11 @@ const Peta = React.lazy(() => import("./Components/Peta.jsx"));
 function App () {
   return (
     <div className="w-full h-full">
-      <React.Suspense fallback="Loading...">
-        <Peta />
-      </React.Suspense>
+      <ErrorBoundary>
+        <React.Suspense fallback="Loading...">
+          <Peta />
+        </React.Suspense>
+      </ErrorBoundary>
     </div>
   )
 }

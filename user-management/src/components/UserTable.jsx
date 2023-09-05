@@ -161,18 +161,18 @@ const UserTable = () => {
         <Card className="h-full w-full">
           <CardHeader floated={false} shadow={false} className="rounded-none">
             <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center md:justify-end">
-            <button className="flex items-center px-6 py-2 text-sm font-medium text-white bg-blue-700 rounded-md hover:bg-blue-600" onClick={goToMap}>
+            <button className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-md hover:bg-blue-600" onClick={goToMap}>
                 <ArrowLeftIcon strokeWidth={2} className="h-4 w-4 mr-2" /> Map
               </button>
               <div className="flex items-center justify-between w-full md:w-max">
               <div className="flex items-center w-full md:w-72">
-                <div className="relative flex items-center pr-2 w-full ml-0">
+                <div className="relative flex items-center pr-7 w-full ml-0">
                   <div className="absolute inset-y-0 pr-3 flex items-center pointer-events-none">
                     <MagnifyingGlassIcon className="h-5 w-5 text-gray-400 mx-1" />
                   </div>
                   <input
                     type="text"
-                    className="block w-full pl-7 py-2 border-gray-400 rounded-md focus:border-blue-300 sm:text-sm placeholder-gray-400 bg-gray-100" // Added bg-gray-100 for the gray background
+                    className="block w-full pl-7 py-2 border-gray-400 rounded-md focus:border-blue-300 sm:text-sm placeholder-gray-400 bg-gray-100"
                     placeholder="Search"
                     value={searchQuery}
                     onChange={handleSearchChange}

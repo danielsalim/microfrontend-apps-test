@@ -83,7 +83,7 @@ const AddModal = ({ isOpen, onClose, onAdd }) => {
           />
         </div>
         <div className="modal-buttons">
-          <button className="modal-add-btn" onClick={handleSubmit}>
+          <button className="modal-confirm-btn" onClick={handleSubmit}>
             Add User
           </button>
           <button className="modal-cancel-btn" onClick={onClose}>

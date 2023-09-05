@@ -3,6 +3,14 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import UserTable from './UserTable'; // Adjust the import path
 
 describe('UserTable component', () => {
+  beforeEach(() => {
+    render(
+      <MemoryRouter>
+        <UserList />
+      </MemoryRouter>
+    );
+  });
+  
   it('renders the UserTable component', () => {
     render(<UserTable />);
     // Check if a specific element is rendered in the component

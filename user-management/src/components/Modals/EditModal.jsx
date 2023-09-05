@@ -84,7 +84,7 @@ const EditModal = ({ isOpen, onClose, onUpdate, user }) => {
           />
         </div>
         <div className="modal-buttons">
-          <button className="modal-update-btn" onClick={handleSubmit}>
+          <button className="modal-confirm-btn" onClick={handleSubmit}>
             Update User
           </button>
           <button className="modal-cancel-btn" onClick={onClose}>

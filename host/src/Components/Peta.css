@@ -1,3 +1,7 @@
 .active {
     border: 2px solid white;
 }
+
+.custom-grab-cursor {
+    cursor: grab;
+}

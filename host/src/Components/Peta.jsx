@@ -13,15 +13,20 @@ import LineString from 'ol/geom/LineString';
 import GeoJson from 'ol/format/GeoJSON';
 import { Fill, Stroke, Style } from 'ol/style';
 import Bandung from '../Assets/Bandung.json';
+import {asArray} from 'ol/color';
 import './Peta.css'
 
 const UserTable = React.lazy(() => import("userManager/Table"));
+
 function Peta() {
     const mapRef = useRef();
     const [map, setMap] = useState(null);
     const [source] = useState(new VectorSource());
     const [isZooming, setIsZooming] = useState(false);
     const [draw, setDraw] = useState(null);
+    const [select, setSelect] = useState(null);
+    const [selectedFeature, setSelectedFeature] = useState(null);
+    const [selectedColor, setSelectedColor] = useState('#FF5733');
 
     const [showUserTable, setShowUserTable] = useState(false);
 
@@ -62,11 +67,7 @@ function Peta() {
             }),
             style: bandungStyle,
         });
-
-        const select = new Select({
-            layers: [source],
-        })
-
+        
 
         olMap.addLayer(bandungLayer);
 
@@ -95,6 +96,34 @@ function Peta() {
             .find((interaction) => interaction instanceof DragBox),
         );
     }
+    };
+
+    const startSelect = () => {
+        const newSelect = new Select({
+            source: [source],
+        });
+
+        newSelect.on('select', (e) => {
+            if (e.selected.length > 0) {
+                console.log(e.selected[0]);
+                setSelectedFeature(e.selected[0]);
+            } else {    
+                setSelectedFeature(null);
+            }
+        });
+
+        if (select) {
+            map.getViewport().classList.remove('custom-grab-cursor');
+            map.removeInteraction(select);
+            setSelect(null);
+        }
+        
+        else if (select === null) {
+            map.getViewport().classList.add('custom-grab-cursor');
+            map.addInteraction(newSelect);
+            setSelect(newSelect);
+        }
+        
     };
 
     const startDrawing = (type) => {
@@ -134,7 +163,6 @@ function Peta() {
         const coords = JSON.parse(storedPolyLine);
         const feature = new Feature({
             geometry: new LineString(coords)
-
         });
         source.addFeature(feature);
     }
@@ -149,6 +177,29 @@ function Peta() {
         }
     }
 
+    const changeFeatureColor = (selectedFeature) => {
+        const colorArray = asArray(selectedColor)
+        if (selectedFeature) {
+            selectedFeature.setStyle(
+                new Style({
+                    fill: new Fill({
+                        color: [colorArray[0], colorArray[1], colorArray[2], 0.5    ],
+                    }),
+                    stroke: new Stroke({
+                        color: selectedColor,
+                        width: 3
+                    })
+                    
+                })
+            );
+        }
+        else {
+            return
+        }
+    }
+
+    const buttonClass = select ? "bg-green-500 text-white p-2 rounded m-1 mr-1" : "bg-purple-400 text-white p-2 rounded m-1 mr-1";
+
     return (
         <div className="w-full h-full">
             {!showUserTable ? (
@@ -158,11 +209,22 @@ function Peta() {
                         <button onClick={openUserTable} className="bg-blue-800 text-white p-2 rounded m-1 mr-1">User Table</button>
                     </div>
                     <div className="absolute right-0 bottom-0 mb-5 mr-5 space-y-2">
-                        <button onClick={() => startDrawing("Point")} className="bg-blue-500 text-white p-2 rounded m-1 mr-1">Draw Point</button>
-                        <button onClick={() => startDrawing("LineString")} className="bg-blue-500 text-white p-2 rounded m-1">Draw Line</button>
-                        <button onClick={() => startDrawing("Polygon")} className="bg-blue-500 text-white p-2 rounded m-1 mr-5">Draw Polygon</button>
-                        <button onClick={stopDrawing} className="bg-red-500 text-white p-2 rounded m-1">Undraw</button>
-                        <button onClick={undoDrawing} className="bg-gray-500 text-white p-2 rounded m-1">Undo Draw</button>
+                        <button onClick={startSelect} className={buttonClass}>{select ? "Confirm Select" : "Select"}</button>
+                        { selectedFeature && select === null ? (<input 
+                            className="bg-white-200 text-white rounded p-1 m-1 mr-5"
+                            type="color"
+                            value={selectedColor}
+                            onChange={(e) => {
+                                setSelectedColor(e.target.value);
+                                changeFeatureColor(selectedFeature)
+                            }}
+                        />) : null}
+                        
+                        <button onClick={() => startDrawing("Circle")} className="bg-blue-500 text-white p-2 rounded m-1 mr-1">Circle</button>
+                        <button onClick={() => startDrawing("LineString")} className="bg-blue-500 text-white p-2 rounded m-1">Line</button>
+                        <button onClick={() => startDrawing("Polygon")} className="bg-blue-500 text-white p-2 rounded m-1 mr-5">Polygon</button>
+                        <button onClick={stopDrawing} className="bg-red-500 text-white p-2 rounded m-1">Exit Draw</button>
+                        <button onClick={undoDrawing} className="bg-gray-500 text-white p-2 rounded m-1 mr-5">Undo Draw</button>
                         <button onClick={startZoomArea} className="bg-green-500 text-white p-2 rounded m-1">Zoom Area</button>
                     </div>
                 </div>

@@ -49,7 +49,8 @@ module.exports = (_, argv) => ({
         userManager: "user_management@http://localhost:8081/remoteEntry.js",
       },
       exposes: {
-        './ViewPeta': './src/Components/Peta.jsx'
+        './ViewPeta': './src/Components/Peta.jsx',
+        './ErrorBoundary': './src/Components/Global/ErrorBoundary.jsx'
       },
       shared: {
         ...deps,
